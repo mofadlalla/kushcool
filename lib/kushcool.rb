@@ -8,8 +8,7 @@ class Kushcool
   end
 
 
-  def initialize(path=nil)
-    Task.filepath = path
+  def initialize
 
     if Task.file_usable?
       puts 'Found task file.'

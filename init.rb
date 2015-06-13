@@ -10,5 +10,5 @@ $:.unshift(File.join(APP_ROOT, 'support'))
 
 require 'kushcool'
 
-kushcool = Kushcool.new('data.txt')
+kushcool = Kushcool.new
 kushcool.launch!

@@ -3,7 +3,7 @@ require 'number_helper'
 class Task
   include NumberHelper
 
-  @@filepath = nil
+  @@filepath = File.join(APP_ROOT, 'data', 'tasks', 'text')
   def self.filepath=(path=nil)
     @@filepath = File.join(APP_ROOT, path)
   end
