@@ -3,13 +3,12 @@ require 'string_extend'
 
 class Kushcool
   class Config
-    @@actions = ['list', 'find', 'add', 'clear', 'quit']
+    @@actions = ['list', 'find', 'add', 'exec', 'quit']
     def self.actions; @@actions; end
   end
 
 
   def initialize
-
     if Task.file_usable?
       puts 'Found task file.'
     elsif Task.create_file
@@ -36,7 +35,7 @@ class Kushcool
     action = nil
     until Kushcool::Config.actions.include?(action)
       puts 'Actions: ' + Kushcool::Config.actions.join(", ") if action
-      print "> "
+      print "#{Dir.pwd}$ "
       user_response = gets.chomp
       args = user_response.downcase.strip.split(' ')
       action = args.shift
@@ -53,8 +52,8 @@ class Kushcool
         find(keyword)
       when 'add'
         add
-      when 'clear'
-        clear
+      when 'exec'
+        execute(args)
       when 'quit'
         return :quit
       else
@@ -112,8 +111,24 @@ class Kushcool
     end
   end
 
-  def clear
-    system 'clear'
+  def execute(args)
+    require 'open3'
+    command = args.shift
+    options = args.shift
+    param1 = args.shift
+    param2 = args.shift
+
+    working_directory = Dir.pwd
+    Dir.chdir(working_directory){
+      stdout, stderr, status = Open3.capture3("#{command} #{options} #{param1} #{param2} ;", :stdin_data=>"y\r\n")
+
+      case status.exitstatus
+      when 0
+        puts stdout
+      when 1, 127
+        puts stderr
+      end
+    }
   end
 
   def introduction
